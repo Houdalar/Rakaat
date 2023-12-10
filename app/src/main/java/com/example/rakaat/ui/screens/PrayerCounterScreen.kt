@@ -1,5 +1,6 @@
 package com.example.rakaat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,6 +8,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,15 +33,22 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun PrayerCounterScreen(navController: NavController) {
-    val prayerViewModel: PrayerViewModel = hiltViewModel<PrayerViewModel>()
-    val currentPrayer = prayerViewModel.currentPrayer.observeAsState().value ?: Prayer(PrayerType.الصبح)
+    val prayerViewModel: PrayerViewModel = hiltViewModel()
+    val currentPrayer by prayerViewModel.currentPrayer.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
     // Dynamic font size based on screen width
 
-    val fontSize = remember(screenWidth) { if (screenWidth < 600.dp) 14.sp else 90.sp }
-    val rakaafontSize = remember(screenWidth) { if (screenWidth < 600.dp) 39.sp else 90.sp }
+    val fontSize = remember(screenWidth) { if (screenWidth < 600.dp) 14.sp else 80.sp }
+    val rakaafontSize = remember(screenWidth) { if (screenWidth < 600.dp) 39.sp else 80.sp }
+
+
+    LaunchedEffect(key1 = currentPrayer) {
+        Log.d("PrayerCounterScreen", "Current Prayer updated: $currentPrayer")
+    }
+    LaunchedEffect(key1 = currentPrayer) {
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -52,13 +64,13 @@ fun PrayerCounterScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "${currentPrayer.type}",
+                text = "صلاة ${currentPrayer.type} ",
                 fontSize = fontSize,
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { navController.navigate("bluetoothConnectionScreen")}
+                    .clickable { navController.navigate("settingsScreen")}
             )
 
             Surface(
@@ -76,7 +88,7 @@ fun PrayerCounterScreen(navController: NavController) {
             }
 
             Text(
-                text = "${currentPrayer.sajdaCount} : السجدة",
+                text = "الركعة",
                 fontSize = fontSize,
                 color = Color.White,
                 textAlign = TextAlign.Center

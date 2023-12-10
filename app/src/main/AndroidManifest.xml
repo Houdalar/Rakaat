@@ -24,7 +24,10 @@
         android:theme="@style/Theme.Rakaat"
         tools:targetApi="31">
         <activity android:name=".ui.screens.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.Rakaat"
+
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
